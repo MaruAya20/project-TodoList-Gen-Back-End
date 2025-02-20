@@ -1,0 +1,100 @@
+Todo List API 测试文档
+======================
+
+本文档包含所有 API 接口的测试命令和预期响应。所有命令都可在 Windows CMD 中直接运行。
+
+1. 获取所有待办事项
+-------------------
+请求：
+curl -X GET "https://pzqmuywecxlm.sealosbja.site/api/get-todo"
+
+成功响应 (200 OK)：
+[
+    {
+        "_id": "67b613f39fe292bce6d6810d",
+        "value": "准备周会演示",
+        "isCompleted": false,
+        "createdAt": "2025-02-19T17:25:07.629Z",
+        "updatedAt": "2025-02-19T17:25:07.629Z",
+        "__v": 0
+    }
+]
+
+失败响应 (500 Internal Server Error)：
+{
+    "message": "Error fetching todos"
+}
+
+
+2. 添加新待办事项
+----------------
+请求：
+curl -X POST "https://pzqmuywecxlm.sealosbja.site/api/add-todo" -H "Content-Type: application/json" -d "{\"value\":\"准备周会演示\"}"
+
+成功响应 (201 Created)：
+{
+    "value": "准备周会演示",
+    "isCompleted": false,
+    "_id": "67b613f39fe292bce6d6810d",
+    "createdAt": "2025-02-19T17:25:07.629Z",
+    "updatedAt": "2025-02-19T17:25:07.629Z",
+    "__v": 0
+}
+
+失败响应 (400 Bad Request)：
+{
+    "message": "Value is required"
+}
+
+
+3. 更新待办事项状态
+-----------------
+请求：
+curl -X POST "https://pzqmuywecxlm.sealosbja.site/api/update-todo/67b613f39fe292bce6d6810d"
+
+成功响应 (200 OK)：
+{
+    "_id": "67b613f39fe292bce6d6810d",
+    "value": "准备周会演示",
+    "isCompleted": true,
+    "createdAt": "2025-02-19T17:25:07.629Z",
+    "updatedAt": "2025-02-19T17:25:07.629Z",
+    "__v": 0
+}
+
+失败响应 (404 Not Found)：
+{
+    "message": "Todo not found"
+}
+
+
+4. 删除待办事项
+-------------
+请求：
+curl -X POST "https://pzqmuywecxlm.sealosbja.site/api/del-todo/67b613f39fe292bce6d6810d"
+
+成功响应 (200 OK)：
+{
+    "message": "Todo deleted successfully"
+}
+
+失败响应 (404 Not Found)：
+{
+    "message": "Todo not found"
+}
+
+
+测试步骤建议：
+------------
+1. 首先使用获取列表接口查看当前待办事项
+2. 使用添加接口创建新的待办事项
+3. 再次获取列表确认添加成功
+4. 使用返回的 ID 测试更新状态
+5. 最后测试删除功能
+
+注意事项：
+--------
+1. 所有接口都返回 JSON 格式的响应
+2. 需要替换示例中的 ID 为实际操作时返回的 ID
+3. 添加待办事项时必须提供 value 字段
+4. 更新和删除操作需要有效的 MongoDB ObjectId 
